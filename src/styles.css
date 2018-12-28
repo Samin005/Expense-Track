@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+.right-inner-addon {
+  position: relative;
+}
+.right-inner-addon input {
+  padding-right: 30px;
+  width: 100%;
+}
+.right-inner-addon fa {
+  position: absolute;
+  right: 0;
+  padding: 10px 12px;
+  pointer-events: none;
+}
+.right-inner-addon fa:hover {
+  cursor: pointer;
+}
+input[type=date]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  display: none;
+}
+input[type=date]::-webkit-calendar-picker-indicator {
+  color: rgba(0, 0, 0, 0);
+  opacity: 1;
+  background: url("assets/images/calendar.svg") no-repeat;
+  width: 15px;
+  height: 15px;
+  border-width: thin;
+  transition: .1s ease;
+}
+input[type=date]::-webkit-calendar-picker-indicator:hover {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}

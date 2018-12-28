@@ -1,20 +1,61 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<nav class="navbar navbar-dark bg-dark justify-content-between">
+  <a class="navbar-brand" style="color: white;">
+    <img src="assets/images/ET.jpg" style="width: 50px; border-radius: 40%; margin: -2% 1% -2% -2%;">
+    ExpenseTrack
+  </a>
+  <div class="pull-right">
+    <h3 style="color: white;">Khandaker Abdul Matin</h3>
+  </div>
+</nav>
+<div class="container">
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8" style="margin-top: 5%;">
+      <h3>All Items:</h3>
+      <div class="form-inline right-inner-addon pull-right">
+        <fa name="search"></fa>
+        <input class="form-control" type="search" placeholder="Search by Item Name" aria-label="Search" (input)="searchByItemName()" #inputSearchByItem>
+      </div>
+      <button *ngIf="showSortButton" class="btn btn-dark" (click)="sort()">Sort by {{ sortBtnText }}</button>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 " style="font-size: large;">
+      <table class="table table-hover text-center">
+        <thead>
+        <tr>
+          <th class="text-center">Date</th>
+          <th class="text-center">Name</th>
+          <th class="text-center">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let item of itemsFirebaseDB | async">
+          <td>{{ item.date }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.price }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td>Total: {{ totalPrice }}</td>
+        </tr>
+        </tbody>
+      </table>
+      <form ngNativeValidate>
+        <input type="date" value="{{ todayDate }}" required class="text-center" style="width: 21%;" title="Set Date" [(ngModel)]="todayDate" name="itemDate" #inputItemDate >
+        <input type="text" placeholder="Name" required class="text-center" style="width: 30%;" #inputItemName>
+        <input type="number" placeholder="Price" required class="text-center" style="width: 20%;" #inputItemPrice>
+        <button class="btn btn-primary" type="submit" style="margin-left: 5%;" (click)="addItem()">Add Item</button>
+      </form>
+    </div>
+    <div class="col-md-2"></div>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
+<hr>
+<div class="form-inline">
+  <h6>Created by Samin Azhan</h6>
+  <fa name="cog" animation="spin"></fa>
+</div>
