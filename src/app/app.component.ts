@@ -39,7 +39,7 @@ export class AppComponent {
     const itemName = this.inputItemName.nativeElement.value;
     const itemDate = this.todayDate;
     const itemPrice = this.inputItemPrice.nativeElement.valueAsNumber;
-    const itemKey = itemName + '_' + itemDate;
+    const itemKey = itemName.toLowerCase() + '_' + itemDate;
     if (itemName !== '' && this.inputItemPrice.nativeElement.value !== '') {
       if (this.containsItem(itemKey)) {
         swal({
@@ -57,7 +57,7 @@ export class AppComponent {
               text: 'Your data is safe :)'
             }).catch(reason => { console.log(reason); });
           } else if (result) {
-            this.firebaseList.set(itemKey, {name: itemName, date: itemDate, price: itemPrice}).catch(reason => { console.log(reason); });
+            this.firebaseList.set(itemKey, {name: itemName, lowerCaseName: itemName.toLowerCase(), date: itemDate, price: itemPrice}).catch(reason => { console.log(reason); });
             swal({
               type: 'success',
               title: 'Success!',
@@ -68,7 +68,7 @@ export class AppComponent {
           }
         });
       } else {
-        this.firebaseList.set(itemKey, {name: itemName, date: itemDate, price: itemPrice}).catch(reason => { console.log(reason); });
+        this.firebaseList.set(itemKey, {name: itemName, lowerCaseName: itemName.toLowerCase(), date: itemDate, price: itemPrice}).catch(reason => { console.log(reason); });
       }
       this.updateAll();
     }
@@ -87,7 +87,7 @@ export class AppComponent {
   }
   searchByItemName() {
     const searchItemName = this.inputSearchByItem.nativeElement.value;
-    this.firebaseList = this.firebaseDB.list('ExpenseTrack/Items', ref => ref.orderByChild('name').startAt(searchItemName).endAt(searchItemName + '\uf8ff'));
+    this.firebaseList = this.firebaseDB.list('ExpenseTrack/Items', ref => ref.orderByChild('lowerCaseName').startAt(searchItemName.toLowerCase()).endAt(searchItemName.toLowerCase() + '\uf8ff'));
     this.itemsFirebaseDB = this.firebaseList.valueChanges();
     this.updateAllPrice();
     this.showSortButton = searchItemName === '';
