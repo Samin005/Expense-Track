@@ -11,13 +11,15 @@ import {Observable} from 'rxjs';
 })
 export class AppComponent {
   @ViewChild('inputItemName') inputItemName: ElementRef;
-  @ViewChild('inputItemDate') inputItemDate: ElementRef;
   @ViewChild('inputItemPrice') inputItemPrice: ElementRef;
   @ViewChild('inputSearchByItem') inputSearchByItem: ElementRef;
+  @ViewChild('inputSearchByItemDate') inputSearchByItemDate: ElementRef;
   itemsFirebaseDB: Observable<any[]>;
   firebaseList: AngularFireList<any>;
   sortBtnText = 'Price';
+  searchBtnText = 'Date';
   showSortButton = true;
+  sortArrowPosition = 'Name';
   allItemDates = [];
   allItemNames = [];
   allItemPrices = [];
@@ -33,7 +35,15 @@ export class AppComponent {
   }
   setToday() {
     const localDate = new Date().toLocaleDateString().split('/');
+    if (localDate[0].length < 2) {
+      localDate[0] = '0' + localDate[0];
+    }
+    if (localDate[1].length < 2) {
+      localDate[1] = '0' + localDate[1];
+    }
     this.todayDate = localDate[2] + '-' + localDate[0] + '-' + localDate[1];
+    // this.todayDate = new Date().toISOString().split('T')[0];
+    console.log(this.todayDate);
   }
   addItem() {
     const itemName = this.inputItemName.nativeElement.value;
@@ -48,7 +58,8 @@ export class AppComponent {
           html: '<strong style="color: red;">' + itemName + '</strong> already existed on <strong style="color: red;">' + itemDate + '</strong>! Do you want to update new value?',
           showCancelButton: true,
           confirmButtonText: 'Yes, update!',
-          cancelButtonText: 'cancel'
+          cancelButtonText: 'cancel',
+          showLoaderOnConfirm: true
         }).then((result) => {
           if (result.dismiss === swal.DismissReason.cancel) {
             swal({
@@ -71,19 +82,35 @@ export class AppComponent {
         this.firebaseList.set(itemKey, {name: itemName, lowerCaseName: itemName.toLowerCase(), date: itemDate, price: itemPrice}).catch(reason => { console.log(reason); });
       }
       this.updateAll();
+      this.sortArrowPosition = 'Name';
     }
   }
   sort() {
     if (this.sortBtnText === 'Price') {
       this.sortBtnText = 'Date';
+      this.sortArrowPosition = 'Price';
       this.firebaseList = this.firebaseDB.list('ExpenseTrack/Items', ref => ref.orderByChild('price'));
       this.itemsFirebaseDB = this.firebaseList.valueChanges();
-    } else {
+    } else if (this.sortBtnText === 'Date') {
       this.sortBtnText = 'Price';
+      this.sortArrowPosition = 'Date';
       this.firebaseList = this.firebaseDB.list('ExpenseTrack/Items', ref => ref.orderByChild('date'));
       this.itemsFirebaseDB = this.firebaseList.valueChanges();
     }
     this.updateAll();
+  }
+  searchBtnClicked() {
+    if (this.searchBtnText === 'Name') {
+      this.searchBtnText = 'Date';
+      this.firebaseList = this.firebaseDB.list('ExpenseTrack/Items');
+      this.itemsFirebaseDB = this.firebaseList.valueChanges();
+      this.updateAll();
+      this.setToday();
+      this.showSortButton = true;
+      this.sortArrowPosition = 'Name';
+    } else {
+      this.searchBtnText = 'Name';
+    }
   }
   searchByItemName() {
     const searchItemName = this.inputSearchByItem.nativeElement.value;
@@ -91,6 +118,15 @@ export class AppComponent {
     this.itemsFirebaseDB = this.firebaseList.valueChanges();
     this.updateAllPrice();
     this.showSortButton = searchItemName === '';
+    this.sortArrowPosition = 'Name';
+  }
+  searchByItemDate() {
+    const searchItemDate = this.inputSearchByItemDate.nativeElement.value;
+    this.firebaseList = this.firebaseDB.list('ExpenseTrack/Items', ref => ref.orderByChild('date').equalTo(searchItemDate));
+    this.itemsFirebaseDB = this.firebaseList.valueChanges();
+    this.updateAllPrice();
+    this.showSortButton = false;
+    this.sortArrowPosition = 'Date';
   }
   containsItem(itemKey: string): boolean {
     return this.allItemKeys.includes(itemKey);

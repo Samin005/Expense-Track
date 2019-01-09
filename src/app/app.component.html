@@ -11,10 +11,19 @@
   <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8" style="margin-top: 5%;">
-      <h3>All Items:</h3>
+      <div class="row">
+        <div class="col-md-4">
+          <h3>All Items:</h3>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <button class="btn btn-danger pull-right" (click)="searchBtnClicked()">Search by {{ searchBtnText }}</button>
+        </div>
+      </div>
       <div class="form-inline right-inner-addon pull-right">
         <fa name="search"></fa>
-        <input class="form-control" type="search" placeholder="Search by Item Name" aria-label="Search" (input)="searchByItemName()" #inputSearchByItem>
+        <input *ngIf="searchBtnText === 'Name'" type="date" (change)="searchByItemDate()" title="Search by Date" #inputSearchByItemDate>
+        <input *ngIf="searchBtnText === 'Date'" class="form-control" type="search" placeholder="Search by Item Name" aria-label="Search" (input)="searchByItemName()" #inputSearchByItem>
       </div>
       <button *ngIf="showSortButton" class="btn btn-dark" (click)="sort()">Sort by {{ sortBtnText }}</button>
     </div>
@@ -26,9 +35,9 @@
       <table class="table table-hover text-center">
         <thead>
         <tr>
-          <th class="text-center">Date</th>
-          <th class="text-center">Name</th>
-          <th class="text-center">Price</th>
+          <th class="text-center">Date<img *ngIf="sortArrowPosition === 'Date'" class="sortArrow"></th>
+          <th class="text-center">Name<img *ngIf="sortArrowPosition === 'Name'" class="sortArrow"></th>
+          <th class="text-center">Price<img *ngIf="sortArrowPosition === 'Price'" class="sortArrow"></th>
         </tr>
         </thead>
         <tbody>
@@ -44,8 +53,8 @@
         </tr>
         </tbody>
       </table>
-      <form ngNativeValidate>
-        <input type="date" value="{{ todayDate }}" required class="text-center" style="width: 21%;" title="Set Date" [(ngModel)]="todayDate" name="itemDate" #inputItemDate >
+      <form ngNativeValidate class="row">
+        <input type="date" value="{{ todayDate }}" required class="text-center" style="width: 21%;" title="Set Date" [(ngModel)]="todayDate" name="itemDate">
         <input type="text" placeholder="Name" required class="text-center" style="width: 30%;" #inputItemName>
         <input type="number" placeholder="Price" required class="text-center" style="width: 20%;" #inputItemPrice>
         <button class="btn btn-primary" type="submit" style="margin-left: 5%;" (click)="addItem()">Add Item</button>

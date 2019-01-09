@@ -33,3 +33,8 @@ input[type=date]::-webkit-calendar-picker-indicator:hover {
   height: 18px;
   cursor: pointer;
 }
+.sortArrow {
+  background: url("assets/images/angle-down-solid.svg") no-repeat center;
+  width: 20px;
+  height: 20px;
+}
