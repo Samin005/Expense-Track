@@ -161,4 +161,11 @@ export class AppComponent {
       });
     });
   }
+  greetings() {
+    swal({
+      title: 'Greetings from Samin Azhan ^_^',
+      confirmButtonText:
+        '<i class="fa fa-thumbs-up"></i> Great!'
+    });
+  }
 }
